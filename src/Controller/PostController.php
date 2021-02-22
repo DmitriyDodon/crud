@@ -19,7 +19,8 @@ class PostController
     {
         $tags = Tag::all();
         $categories = Category::all();
-        return view('post/form', compact('tags', 'categories'));
+        $tags_id = [];
+        return view('post/form', compact('tags', 'categories' , 'tags_id'));
     }
 
     public function store()
@@ -65,13 +66,12 @@ class PostController
         $tags = Tag::all();
         $categories = Category::all();
 
-        $_SESSION['data']['title'] = $post->title;
-        $_SESSION['data']['slug'] = $post->slug;
-        $_SESSION['data']['body'] = $post->body;
-        $_SESSION['data']['category'] = $post->category;
-        $_SESSION['data']['tags'] = $post->tags->pluck('id')->toArray();
+        $tags_id = $post->tags->toArray();
+        foreach ($tags_id as $key => $value) {
+            $tags_id[$key] = $value['id'];
+        }
 
-        return view('post/form', compact('tags', 'categories'));
+        return view('post/form', compact('tags', 'categories', 'post' , 'tags_id'));
     }
 
     public function update($id)
@@ -92,6 +92,11 @@ class PostController
         $errors = $validator->errors();
         if (count($errors) > 0) {
             $_SESSION['errors'] = $errors->toArray();
+            $tags = [];
+            if (!isset($data['tags'])){
+                $data['tags'] = $tags;
+            }
+
             $_SESSION['data'] = $data;
 
             return new RedirectResponse($_SERVER['HTTP_REFERER']);

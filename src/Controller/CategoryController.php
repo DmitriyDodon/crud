@@ -54,10 +54,7 @@ class CategoryController
     {
         $category = \App\Model\Category::find($id);
 
-        $_SESSION['data']['title'] = $category->title;
-        $_SESSION['data']['slug'] = $category->slug;
-
-        return view('category/form');
+        return view('category/form', compact('category'));
     }
 
     public function update($id)

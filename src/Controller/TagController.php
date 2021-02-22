@@ -54,10 +54,7 @@ class TagController
     {
         $tag = \App\Model\Tag::find($id);
 
-        $_SESSION['data']['title'] = $tag->title;
-        $_SESSION['data']['slug'] = $tag->slug;
-
-        return view('tag/form');
+        return view('tag/form' , compact('tag'));
     }
 
     public function update($id)
